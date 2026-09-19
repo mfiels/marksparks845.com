@@ -1,0 +1,7 @@
+photos-src/
+raw-photos/
+public/
+
+node_modules/
+__pycache__/
+.DS_Store
