@@ -243,7 +243,7 @@ main > section {
 .about-photo { margin: 0; }
 .about-photo img { width: 100%; height: auto; border-radius: var(--radius); }
 @media (max-width: 899px) {
-  .about-photo { max-width: 360px; }
+  .about-photo { max-width: 360px; order: 1; }
 }
 @media (min-width: 900px) {
   .about:has(.about-photo) { grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.4fr); }
