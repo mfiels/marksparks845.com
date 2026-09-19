@@ -275,6 +275,12 @@ main > section {
 .faq details[open] summary::after { content: "−"; }
 .faq details p { color: var(--muted); margin: 0.75rem 0 0; }
 
+/* ---------- Prose (privacy page) ---------- */
+
+.prose > * { max-width: 68ch; }
+.prose h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 750; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
+.prose a { text-decoration: underline; text-underline-offset: 2px; }
+
 /* ---------- Footer ---------- */
 
 .footer {

@@ -8,9 +8,9 @@
 GitHub Actions runs this on every push to main and publishes public/.
 
 - Generates gallery.js from photos.csv (caption order = carousel order).
-- Minifies index.html, styles.css, app.js.
-- Appends ?v=<content hash> to every local href/src in index.html, and to every photo URL
-  in gallery.js, so browsers refetch a file as soon as it changes.
+- Minifies every .html, .css, and .js file in src/.
+- Appends ?v=<content hash> to every local asset href/src in the pages, and to every photo
+  URL in gallery.js, so browsers refetch a file as soon as it changes.
 """
 
 import csv
@@ -67,10 +67,10 @@ def gallery_js():
 
 
 def stamp(html):
-    """Fingerprint every local href/src that points at a built file."""
+    """Fingerprint every local href/src that points at a built asset (not other pages)."""
     def repl(m):
         attr, url = m.group(1), m.group(2)
-        if (OUT / url).is_file():
+        if not url.endswith(".html") and (OUT / url).is_file():
             return f'{attr}="{versioned(url)}"'
         return m.group(0)
     return re.sub(r'\b(href|src)="([^":#?]+)"', repl, html)
@@ -90,15 +90,17 @@ def main():
 
     sizes = {}
     sizes["gallery.js"] = write("gallery.js", gallery_js())
-    sizes["styles.css"] = write("styles.css", rcssmin.cssmin((SRC / "styles.css").read_text()))
-    sizes["app.js"] = write("app.js", rjsmin.jsmin((SRC / "app.js").read_text()))
+    for src in sorted(SRC.glob("*.css")):
+        sizes[src.name] = write(src.name, rcssmin.cssmin(src.read_text()))
+    for src in sorted(SRC.glob("*.js")):
+        sizes[src.name] = write(src.name, rjsmin.jsmin(src.read_text()))
 
-    # Assets first, so index.html can fingerprint their final (minified) contents.
-    html = stamp((SRC / "index.html").read_text())
-    sizes["index.html"] = write("index.html", minify_html.minify(
-        html, minify_css=True, minify_js=True, keep_closing_tags=True,
-        keep_html_and_head_opening_tags=True,
-    ))
+    # Assets first, so the pages can fingerprint their final (minified) contents.
+    for src in sorted(SRC.glob("*.html")):
+        sizes[src.name] = write(src.name, minify_html.minify(
+            stamp(src.read_text()), minify_css=True, minify_js=True,
+            keep_closing_tags=True, keep_html_and_head_opening_tags=True,
+        ))
 
     for name, size in sizes.items():
         src = SRC / name

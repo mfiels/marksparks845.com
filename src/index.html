@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://*.googletagmanager.com; style-src 'self'; img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com; connect-src https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Mark Sparks · Electrical, Smart Home &amp; Carpentry · Wappingers Falls, NY</title>
   <meta name="description" content="Residential electrical, lighting, smart home, and finish carpentry in southern Dutchess County: Wappingers Falls, Fishkill, East Fishkill, Hopewell Junction, and the Town of Poughkeepsie. Wall repair and accent walls available as an add-on.">
@@ -21,6 +21,7 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="theme-color" content="#f6f5f1">
   <link rel="stylesheet" href="styles.css">
+  <script src="analytics.js" defer></script>
 
   <script type="application/ld+json">
   {
@@ -182,7 +183,7 @@
     <p class="muted">Serving southern Dutchess County, NY</p>
     <p class="muted">Fully insured</p>
   </div>
-  <p class="legal muted">© <span id="year">2026</span> Mark Sparks LLC</p>
+  <p class="legal muted">© <span id="year">2026</span> Mark Sparks LLC · <a href="privacy.html">Privacy</a></p>
 </footer>
 
 <dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
