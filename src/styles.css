@@ -50,6 +50,10 @@ p { margin: 0 0 0.75rem; }
   font-weight: 750; letter-spacing: -0.03em; font-size: 1.15rem;
   text-decoration: none; margin: 0;
 }
+@media (max-width: 374px) {
+  .wordmark { font-size: 1rem; }
+  .bar-call { padding: 0 12px; font-size: 0.85rem; }
+}
 .bar-call {
   display: inline-flex; align-items: center;
   min-height: 40px; padding: 0 16px;
@@ -87,13 +91,13 @@ main > section {
   margin-bottom: 1rem;
 }
 .hero h1 {
-  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-size: clamp(2.1rem, 10.5vw, 5rem);
   font-weight: 750;
   letter-spacing: -0.04em;
   margin-bottom: 0.6rem;
 }
 .trades {
-  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-size: clamp(1rem, 5.2vw, 2rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -101,7 +105,8 @@ main > section {
 }
 .dot { color: var(--accent); }
 @media (min-width: 900px) {
-  /* Half-width column: keep the three trades on one line */
+  /* Half-width column: keep the name and the trades each on one line */
+  .hero h1 { font-size: clamp(2.6rem, 4.8vw, 4rem); }
   .trades { font-size: clamp(1.3rem, 2.2vw, 1.75rem); white-space: nowrap; }
 }
 .pitch { font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--ink); max-width: 40ch; }
