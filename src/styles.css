@@ -169,6 +169,8 @@ main > section {
 
 /* ---------- Services ---------- */
 
+.services .lead { color: var(--muted); max-width: 90ch; margin: -0.5rem 0 1.5rem; }
+
 .service-grid {
   display: grid;
   grid-template-columns: 1fr;
