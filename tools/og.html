@@ -1,22 +1,66 @@
 <!doctype html>
-<!-- Link-preview card, rendered to src/photos/og.jpg at 1200x630 by tools/render_images.js. -->
+<!-- Link-preview card, rendered to src/photos/og.jpg at 1200x630 by tools/render_images.js.
+     Same lockup as the Google cover. Lines are positioned by their measured ink, so the name,
+     rule, and trades line share exact edges and everything is centered on what's visible. -->
 <meta charset="utf-8">
 <style>
   @font-face { font-family: "Inter"; src: url("inter-latin.woff2") format("woff2"); font-weight: 100 900; }
   html, body { margin: 0; }
   body {
-    width: 1200px; height: 630px;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 0 96px; box-sizing: border-box;
+    width: 1200px; height: 630px; box-sizing: border-box; position: relative;
     background: #f6f5f1; color: #141414;
-    font-family: "Inter", sans-serif;
-    -webkit-font-smoothing: antialiased;
+    font-family: "Inter", sans-serif; -webkit-font-smoothing: antialiased;
   }
-  .eyebrow { color: #94560c; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 28px; }
-  h1 { font-size: 168px; font-weight: 750; letter-spacing: -0.045em; line-height: 1; margin: 0 0 28px; }
-  .trades { white-space: nowrap; font-size: 56px; font-weight: 600; letter-spacing: -0.025em; margin: 0; }
-  .dot { color: #d0801c; padding: 0 0.05em; }
+  .line { position: absolute; left: 0; margin: 0; line-height: 1; white-space: nowrap; text-transform: uppercase; }
+  .eyebrow { color: #94560c; font-weight: 600; font-size: 23px; letter-spacing: 0.08em; }
+  .name { font-size: 64px; font-weight: 650; letter-spacing: 0.18em; }
+  .trades { font-weight: 500; letter-spacing: 0.2em; }
+  .dot { color: #d0801c; }
+  .rule { position: absolute; height: 7px; border-radius: 4px; background: #d0801c; }
 </style>
-<p class="eyebrow">Southern Dutchess County, NY</p>
-<h1>Mark Sparks</h1>
-<p class="trades">Electrical <span class="dot">·</span> Smart Home <span class="dot">·</span> Carpentry</p>
+<p class="line eyebrow" id="eyebrow">Southern Dutchess County, NY</p>
+<p class="line name" id="name">Mark Sparks LLC</p>
+<div class="rule" id="rule"></div>
+<p class="line trades" id="trades">Electrical <span class="dot">·</span> Smart Home <span class="dot">·</span> Carpentry</p>
+<script>
+  // Horizontal ink extents of an element's rendered text. The page gives the text's position
+  // and advance width; canvas gives the side bearings (blank space inside the first and last
+  // glyphs) so the result covers only painted pixels, excluding the trailing letter-spacing.
+  function ink(el) {
+    const cs = getComputedStyle(el), ls = parseFloat(cs.letterSpacing) || 0;
+    const r = document.createRange(); r.selectNodeContents(el);
+    const b = r.getBoundingClientRect(), x0 = b.left - el.getBoundingClientRect().left;
+    const c = document.createElement("canvas").getContext("2d");
+    c.font = `${cs.fontWeight} ${cs.fontSize} Inter`; c.letterSpacing = cs.letterSpacing;
+    const m = c.measureText(el.textContent.toUpperCase());
+    const bearL = -m.actualBoundingBoxLeft, bearR = (m.width - ls) - m.actualBoundingBoxRight;
+    return { left: x0 + bearL, right: x0 + b.width - ls - bearR };
+  }
+  function placeCentered(el, top) {
+    const i = ink(el);
+    el.style.left = (600 - (i.left + i.right) / 2) + "px";
+    el.style.top = top + "px";
+    return i.right - i.left;
+  }
+  document.fonts.ready.then(() => {
+    const W = 1200, H = 630, GAP_EYE = 38, GAP = 28, RULE_H = 7;
+    const name = document.getElementById("name"), trades = document.getElementById("trades");
+    // Scale the trades line so its ink is exactly as wide as the name's.
+    trades.style.fontSize = "30px";
+    const nameW = ink(name).right - ink(name).left;
+    const t30 = ink(trades).right - ink(trades).left;
+    trades.style.fontSize = (30 * nameW / t30) + "px";
+    const t1 = ink(trades).right - ink(trades).left;
+    trades.style.fontSize = (parseFloat(trades.style.fontSize) * nameW / t1) + "px";
+    // Vertical: stack by line boxes, then center the whole block.
+    const hE = document.getElementById("eyebrow").offsetHeight, hN = name.offsetHeight, hT = trades.offsetHeight;
+    const total = hE + GAP_EYE + hN + GAP + RULE_H + GAP + hT;
+    let y = (H - total) / 2;
+    placeCentered(document.getElementById("eyebrow"), y); y += hE + GAP_EYE;
+    placeCentered(name, y); y += hN + GAP;
+    const rule = document.getElementById("rule");
+    rule.style.left = (W - nameW) / 2 + "px"; rule.style.width = nameW + "px"; rule.style.top = y + "px"; y += RULE_H + GAP;
+    placeCentered(trades, y);
+    document.body.dataset.ready = "1";
+  });
+</script>

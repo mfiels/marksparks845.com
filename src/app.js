@@ -1,3 +1,53 @@
+// Brand lockup: fine-tune the amber rule and trades line so all three rows share the name's
+// exact painted edges. CSS gets them within a few pixels; browsers round glyph positions at
+// some sizes, so this measures the rendered text and corrects the remainder.
+(function () {
+  const wrap = document.querySelector(".hero-text");
+  const name = wrap && wrap.querySelector("h1");
+  const rule = wrap && wrap.querySelector(".brand-rule");
+  const trades = wrap && wrap.querySelector(".trades");
+  if (!name || !rule || !trades) return;
+  const canvas = document.createElement("canvas").getContext("2d");
+
+  // Painted horizontal extent of an element's text, relative to the wrapper's left edge.
+  function ink(el) {
+    const cs = getComputedStyle(el), ls = parseFloat(cs.letterSpacing) || 0;
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    const box = r.getBoundingClientRect(), x0 = box.left - wrap.getBoundingClientRect().left;
+    canvas.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    canvas.letterSpacing = cs.letterSpacing;
+    const m = canvas.measureText(el.textContent.toUpperCase());
+    const bearL = -m.actualBoundingBoxLeft, bearR = m.width - ls - m.actualBoundingBoxRight;
+    return { left: x0 + bearL, right: x0 + box.width - ls - bearR };
+  }
+
+  function fit() {
+    trades.style.fontSize = trades.style.marginLeft = trades.style.transform = "";
+    rule.style.width = rule.style.marginLeft = "";
+    const n = ink(name), target = n.right - n.left;
+    rule.style.marginLeft = n.left + "px";
+    rule.style.width = target + "px";
+    for (let i = 0; i < 2; i++) {
+      const t = ink(trades), size = parseFloat(getComputedStyle(trades).fontSize);
+      trades.style.fontSize = size * target / (t.right - t.left) + "px";
+    }
+    // Font sizes land on whole-pixel glyph positions on some screens; a sub-percent horizontal
+    // scale closes whatever gap remains.
+    let t = ink(trades);
+    trades.style.transformOrigin = "0 0";
+    trades.style.transform = `scaleX(${target / (t.right - t.left)})`;
+    t = ink(trades);
+    const ml = parseFloat(getComputedStyle(trades).marginLeft) || 0;
+    trades.style.marginLeft = ml + (n.left - t.left) + "px";
+  }
+
+  document.fonts.ready.then(() => {
+    fit();
+    new ResizeObserver(fit).observe(wrap);
+  });
+})();
+
 // Photos from window.GALLERY (gallery.js): a carousel in the hero, an optional grid
 // further down, and a shared full-screen lightbox.
 (function () {

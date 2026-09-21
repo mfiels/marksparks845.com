@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/inter-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
   --bg: #f6f5f1;
   --surface: #ffffff;
@@ -46,16 +53,22 @@ p { margin: 0 0 0.75rem; }
   -webkit-backdrop-filter: saturate(1.4) blur(10px);
   border-bottom: 1px solid var(--line);
 }
+.bar { gap: 12px; }
 .wordmark {
-  font-weight: 750; letter-spacing: -0.03em; font-size: 1.15rem;
-  text-decoration: none; margin: 0;
+  font-weight: 650; letter-spacing: 0.14em; font-size: 0.95rem; text-transform: uppercase;
+  text-decoration: none; margin: 0; white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .bar .wordmark { font-size: 0.8rem; letter-spacing: 0.12em; }
+  .bar-call { padding: 0 14px; font-size: 0.85rem; }
 }
 @media (max-width: 374px) {
-  .wordmark { font-size: 1rem; }
+  .bar .wordmark { font-size: 0.72rem; letter-spacing: 0.1em; }
+  .bar-num { display: none; }
   .bar-call { padding: 0 12px; font-size: 0.85rem; }
 }
 .bar-call {
-  display: inline-flex; align-items: center;
+  display: inline-flex; align-items: center; gap: 0.3em; white-space: nowrap; flex: none;
   min-height: 40px; padding: 0 16px;
   border-radius: 999px;
   background: var(--ink); color: var(--bg);
@@ -90,25 +103,25 @@ main > section {
   letter-spacing: 0.08em; text-transform: uppercase;
   margin-bottom: 1rem;
 }
+/* Brand lockup: name, amber rule, trades line, sharing exact left and right edges.
+   The ratios are Inter's measured ink metrics: the name's ink is 11.74em wide and starts
+   0.07em in; the trades line matches that width at 0.43019x the size, starting 0.0344em in. */
+.hero-text { container-type: inline-size; --n: min(3rem, calc(100cqw / 11.9)); }
 .hero h1 {
-  font-size: clamp(2.1rem, 10.5vw, 5rem);
-  font-weight: 750;
-  letter-spacing: -0.04em;
-  margin-bottom: 0.6rem;
+  font-size: var(--n); font-weight: 650; letter-spacing: 0.18em; text-transform: uppercase;
+  white-space: nowrap; line-height: 1; margin: 0 0 calc(var(--n) * 0.44);
+}
+.brand-rule {
+  width: calc(var(--n) * 11.74); height: max(3px, calc(var(--n) * 0.1));
+  margin: 0 0 calc(var(--n) * 0.44) calc(var(--n) * 0.07);
+  border-radius: 999px; background: var(--accent);
 }
 .trades {
-  font-size: clamp(1rem, 5.2vw, 2rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  margin-bottom: 1.25rem;
+  font-size: calc(var(--n) * 0.43019); font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; white-space: nowrap; line-height: 1;
+  margin: 0 0 1.5rem calc(var(--n) * (0.07 - 0.0344));
 }
 .dot { color: var(--accent); }
-@media (min-width: 900px) {
-  /* Half-width column: keep the name and the trades each on one line */
-  .hero h1 { font-size: clamp(2.6rem, 4.8vw, 4rem); }
-  .trades { font-size: clamp(1.3rem, 2.2vw, 1.75rem); white-space: nowrap; }
-}
 .pitch { font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--ink); max-width: 40ch; }
 .hint { color: var(--muted); font-size: 0.95rem; max-width: 60ch; margin-top: 1rem; }
 

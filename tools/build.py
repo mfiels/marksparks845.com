@@ -33,7 +33,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "src"
 OUT = ROOT / "public"
 CSV = ROOT / "photos.csv"
-ASSET_DIRS = ["photos", "icons"]
+ASSET_DIRS = ["photos", "icons", "fonts"]
 
 
 def fingerprint(path):
