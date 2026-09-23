@@ -24,7 +24,7 @@ FIELDS = [
     "TEL;TYPE=WORK,VOICE:+1-845-464-1808",
     "EMAIL;TYPE=WORK,INTERNET:mark@marksparks845.com",
     "URL:https://marksparks845.com/",
-    r"NOTE:Electrical\, smart home & carpentry · Southern Dutchess County\, NY",
+    r"NOTE:Electrical\, smart home & carpentry · Dutchess County\, NY",
 ]
 
 
