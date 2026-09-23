@@ -34,6 +34,7 @@ SRC = ROOT / "src"
 OUT = ROOT / "public"
 CSV = ROOT / "photos.csv"
 ASSET_DIRS = ["photos", "icons", "fonts"]
+ROOT_FILES = ["robots.txt", "contact.vcf"]   # served as-is at the site root
 
 
 def fingerprint(path):
@@ -87,6 +88,8 @@ def main():
     OUT.mkdir()
     for d in ASSET_DIRS:
         shutil.copytree(SRC / d, OUT / d)
+    for name in ROOT_FILES:
+        shutil.copyfile(SRC / name, OUT / name)
 
     sizes = {}
     sizes["gallery.js"] = write("gallery.js", gallery_js())
