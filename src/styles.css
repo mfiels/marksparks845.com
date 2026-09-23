@@ -103,10 +103,16 @@ main > section {
   letter-spacing: 0.08em; text-transform: uppercase;
   margin-bottom: 1rem;
 }
-/* Brand lockup: name, amber rule, trades line, sharing exact left and right edges.
+/* Brand lockup: M⚡S mark, name, amber rule, trades line, sharing exact left and right edges.
    The ratios are Inter's measured ink metrics: the name's ink is 11.74em wide and starts
    0.07em in; the trades line matches that width at 0.43019x the size, starting 0.0344em in. */
 .hero-text { container-type: inline-size; --n: min(3rem, calc(100cqw / 11.9)); }
+.brand-mark {
+  display: block; width: calc(var(--n) * 11.74); height: auto;
+  margin: 0 0 calc(var(--n) * 0.62) calc(var(--n) * 0.07);
+  fill: var(--ink); overflow: visible;
+}
+.brand-mark .bolt { fill: var(--accent); }
 .hero h1 {
   font-size: var(--n); font-weight: 650; letter-spacing: 0.18em; text-transform: uppercase;
   white-space: nowrap; line-height: 1; margin: 0 0 calc(var(--n) * 0.44);

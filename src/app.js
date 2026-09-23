@@ -1,4 +1,4 @@
-// Brand lockup: fine-tune the amber rule and trades line so all three rows share the name's
+// Brand lockup: fine-tune the M⚡S mark, amber rule, and trades line so all three rows share the name's
 // exact painted edges. CSS gets them within a few pixels; browsers round glyph positions at
 // some sizes, so this measures the rendered text and corrects the remainder.
 (function () {
@@ -6,6 +6,7 @@
   const name = wrap && wrap.querySelector("h1");
   const rule = wrap && wrap.querySelector(".brand-rule");
   const trades = wrap && wrap.querySelector(".trades");
+  const mark = wrap && wrap.querySelector(".brand-mark");
   if (!name || !rule || !trades) return;
   const canvas = document.createElement("canvas").getContext("2d");
 
@@ -28,6 +29,10 @@
     const n = ink(name), target = n.right - n.left;
     rule.style.marginLeft = n.left + "px";
     rule.style.width = target + "px";
+    if (mark) {
+      mark.style.marginLeft = n.left + "px";
+      mark.style.width = target + "px";
+    }
     for (let i = 0; i < 2; i++) {
       const t = ink(trades), size = parseFloat(getComputedStyle(trades).fontSize);
       trades.style.fontSize = size * target / (t.right - t.left) + "px";
