@@ -1,6 +1,8 @@
-// Brand lockup: fine-tune the M⚡S mark, amber rule, and trades line so all three rows share the name's
-// exact painted edges. CSS gets them within a few pixels; browsers round glyph positions at
-// some sizes, so this measures the rendered text and corrects the remainder.
+// Brand lockup: fine-tune the M⚡S mark, amber rule, and trades line so all four rows share the
+// name's exact painted edges. CSS gets them within a few pixels; browsers round glyph positions
+// at some sizes, so this measures the rendered text and corrects the remainder. Corrections are
+// transforms only, so they never reflow the page, and run before first paint when Inter is
+// already loaded (it's preloaded in the page head).
 (function () {
   const wrap = document.querySelector(".hero-text");
   const name = wrap && wrap.querySelector("h1");
@@ -23,30 +25,28 @@
     return { left: x0 + bearL, right: x0 + box.width - ls - bearR };
   }
 
-  function fit() {
-    trades.style.fontSize = trades.style.marginLeft = trades.style.transform = "";
-    rule.style.width = rule.style.marginLeft = "";
-    const n = ink(name), target = n.right - n.left;
-    rule.style.marginLeft = n.left + "px";
-    rule.style.width = target + "px";
-    if (mark) {
-      mark.style.marginLeft = n.left + "px";
-      mark.style.width = target + "px";
-    }
-    for (let i = 0; i < 2; i++) {
-      const t = ink(trades), size = parseFloat(getComputedStyle(trades).fontSize);
-      trades.style.fontSize = size * target / (t.right - t.left) + "px";
-    }
-    // Font sizes land on whole-pixel glyph positions on some screens; a sub-percent horizontal
-    // scale closes whatever gap remains.
-    let t = ink(trades);
-    trades.style.transformOrigin = "0 0";
-    trades.style.transform = `scaleX(${target / (t.right - t.left)})`;
-    t = ink(trades);
-    const ml = parseFloat(getComputedStyle(trades).marginLeft) || 0;
-    trades.style.marginLeft = ml + (n.left - t.left) + "px";
+  // Scale el about its left edge so the painted span [left, right] lands on [x0, x0 + width].
+  function align(el, left, right, x0, width, uniform) {
+    const k = width / (right - left);
+    const edge = el.getBoundingClientRect().left - wrap.getBoundingClientRect().left;
+    el.style.transformOrigin = "0 0";
+    el.style.transform = `translateX(${x0 - edge - (left - edge) * k}px) ${uniform ? "scale" : "scaleX"}(${k})`;
   }
 
+  function fit() {
+    for (const el of [mark, rule, trades]) if (el) el.style.transform = "";
+    const n = ink(name), target = n.right - n.left, wx = wrap.getBoundingClientRect().left;
+    for (const el of [mark, rule]) {
+      if (!el) continue;
+      const b = el.getBoundingClientRect();
+      align(el, b.left - wx, b.right - wx, n.left, target, el === mark);
+    }
+    const t = ink(trades);
+    align(trades, t.left, t.right, n.left, target, false);
+  }
+
+  const weight = getComputedStyle(name).fontWeight;
+  if (document.fonts.check(`${weight} 16px Inter`)) fit();
   document.fonts.ready.then(() => {
     fit();
     new ResizeObserver(fit).observe(wrap);

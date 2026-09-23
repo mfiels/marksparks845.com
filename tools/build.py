@@ -77,6 +77,16 @@ def stamp(html):
     return re.sub(r'\b(href|src)="([^":#?]+)"', repl, html)
 
 
+def stamp_css(css):
+    """Fingerprint local url(...) references, so the font URL matches the page's preload."""
+    def repl(m):
+        q, url = m.group(1), m.group(2)
+        if (OUT / url).is_file():
+            return f"url({q}{versioned(url)}{q})"
+        return m.group(0)
+    return re.sub(r"""url\((["']?)([^"')?#:]+)\1\)""", repl, css)
+
+
 def write(rel, text):
     (OUT / rel).write_text(text)
     return (OUT / rel).stat().st_size
@@ -94,7 +104,7 @@ def main():
     sizes = {}
     sizes["gallery.js"] = write("gallery.js", gallery_js())
     for src in sorted(SRC.glob("*.css")):
-        sizes[src.name] = write(src.name, rcssmin.cssmin(src.read_text()))
+        sizes[src.name] = write(src.name, stamp_css(rcssmin.cssmin(src.read_text())))
     for src in sorted(SRC.glob("*.js")):
         sizes[src.name] = write(src.name, rjsmin.jsmin(src.read_text()))
 
