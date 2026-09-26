@@ -85,6 +85,11 @@ main > section {
   scroll-margin-top: 64px;  /* clear the sticky bar on anchor jumps */
 }
 
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
 /* ---------- Hero ---------- */
 
 .hero {
@@ -103,31 +108,17 @@ main > section {
   letter-spacing: 0.08em; text-transform: uppercase;
   margin-bottom: 1rem;
 }
-/* Brand lockup: M⚡S mark, name, amber rule, trades line, sharing exact left and right edges.
-   The ratios are Inter's measured ink metrics: the name's ink is 11.74em wide and starts
-   0.07em in; the trades line matches that width at 0.43019x the size, starting 0.0344em in. */
+/* Brand lockup: M⚡S mark, name, amber rule, and trades line, drawn as one SVG from Inter's
+   outlines by tools/make_lockup.py, so it paints in final form without the web font. The art
+   is the name's ink, 11.7303em wide; 0.0694em in is where the name's ink started as text. */
 .hero-text { container-type: inline-size; --n: min(3rem, calc(100cqw / 11.9)); }
-.brand-mark {
-  display: block; width: calc(var(--n) * 11.74); height: auto;
-  margin: 0 0 calc(var(--n) * 0.62) calc(var(--n) * 0.07);
+.lockup { margin: 0 0 1.5rem; }
+.lockup-art {
+  display: block; width: calc(var(--n) * 11.7303); height: auto;
+  margin-left: calc(var(--n) * 0.0694);
   fill: var(--ink); overflow: visible;
 }
-.brand-mark .bolt { fill: var(--accent); }
-.hero h1 {
-  font-size: var(--n); font-weight: 650; letter-spacing: 0.18em; text-transform: uppercase;
-  white-space: nowrap; line-height: 1; margin: 0 0 calc(var(--n) * 0.44);
-}
-.brand-rule {
-  width: calc(var(--n) * 11.74); height: max(3px, calc(var(--n) * 0.1));
-  margin: 0 0 calc(var(--n) * 0.44) calc(var(--n) * 0.07);
-  border-radius: 999px; background: var(--accent);
-}
-.trades {
-  font-size: calc(var(--n) * 0.43019); font-weight: 500; letter-spacing: 0.2em;
-  text-transform: uppercase; white-space: nowrap; line-height: 1;
-  margin: 0 0 1.5rem calc(var(--n) * (0.07 - 0.0344));
-}
-.dot { color: var(--accent); }
+.lockup-art .accent { fill: var(--accent); }
 .pitch { font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--ink); max-width: 40ch; }
 .hint { color: var(--muted); font-size: 0.95rem; max-width: 60ch; margin-top: 1rem; }
 
