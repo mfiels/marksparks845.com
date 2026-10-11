@@ -311,6 +311,13 @@ main > section {
 .footer p { margin: 0 0 0.3rem; }
 .footer a { text-decoration: none; }
 .footer a:hover { text-decoration: underline; }
+.follow-head {
+  color: var(--muted); font-weight: 600; font-size: 0.8rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.follow ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.follow a { display: inline-flex; align-items: center; gap: 10px; }
+.follow svg { width: 18px; height: 18px; flex: none; }
 .legal { grid-column: 1 / -1; font-size: 0.85rem; }
 
 /* ---------- Lightbox ---------- */
